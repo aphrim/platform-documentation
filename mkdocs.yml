@@ -319,7 +319,7 @@ plugins:
   #     languages:
   #       fr: Français
   - git-revision-date-localized
-  - autolinks
+  - ezlinks
   - redirects:
       redirect_maps:
         start.md: getting_started/start.md
