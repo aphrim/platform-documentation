@@ -2,7 +2,7 @@
 site_name: Core Documentation
 site_description: API Documentation & Tutorials for the Core Platform.
 site_author: Manticore Games, Inc.
-site_url: !ENV [MKDOCS_SITE_URL, 'https://development.docs.coregames.com']
+site_url: !ENV [MKDOCS_SITE_URL, "https://development.docs.coregames.com"]
 
 # Repository
 # repo_name: ManticoreGamesInc/platform-documentation
@@ -15,7 +15,7 @@ copyright: "&copy; 2021 Manticore Games, Inc. Core&trade; is a trademark of Mant
 # Directory for the documentation pages
 docs_dir: src
 
-# If you add or remove a page, you must also add or remove in mkdocs-prod.yml
+# If you add or remove a page, you must add it here
 nav:
   - Documentation:
       - Home: index.md
@@ -29,7 +29,7 @@ nav:
               - Create a Survival Game: tutorials/survival_tutorial.md
           - Publish a Game: getting_started/publishing.md
           - Getting Help in Core: getting_started/core_help.md
-          - Core for Game Jams: tutorials/global_game_jam.md
+          - Core for Game Jams: references/global_game_jam.md
       - Coming from other Platforms:
           - Fortnite Creative: other_platforms/fortnite_creative.md
           - Roblox: other_platforms/roblox.md
@@ -37,18 +37,19 @@ nav:
           - World of Warcraft: other_platforms/world_of_warcraft.md
       - Best Practices:
           - Backing Up Your Projects: getting_started/backups.md
-          - Collaboration: tutorials/collaboration_overview.md
+          - Collaboration: references/collaboration.md
           - Creator Analytics: tutorials/creator_analytics.md
           - GitHub and Core: tutorials/github.md
           - Improving Your Game: tutorials/improving_your_game.md
           - Lua Style Guide: tutorials/lua_style_guide.md
       - Perks Program:
-          - About the Perks Program: perks/perks_program.md
-          - Perks Rules: perks/perks_rules.md
-          - Joining the Perks Program: perks/joining_perks.md
-          - Implementing Perks: perks/implementing_perks.md
+          - About the Perks Program: references/perks/program.md
+          - Perks Rules: references/perks/rules.md
+          - Joining the Perks Program: references/perks/joining.md
+          - Implementing Perks: references/perks/implementing.md
+          - Implementing Reward Points: references/perks/reward_points.md
       - Tutorials:
-          - Abilities: tutorials/abilities.md
+          - Abilities: tutorials/ability_tutorial.md
           - AI Activities: tutorials/ai_activity_tutorial.md
           - Chat Hooks: tutorials/chat_tutorial.md
           - Environment Art: tutorials/environment_art.md
@@ -59,43 +60,51 @@ nav:
               - Scripting (Beginner): tutorials/lua_basics_helloworld.md
               - Scripting (Intermediate): tutorials/lua_basics_lightbulb.md
               - Scripting (Advanced): tutorials/lua_basics_manticoin.md
-          - Survival Contest Kit: tutorials/survival_kit.md
+          - Survival Contest Kit: references/survival_kit.md
+          - Racing Framework Kit: tutorials/racing_tutorial.md
           - Visual Effects in Core: tutorials/vfx_tutorial.md
           - Weapons: tutorials/weapons_tutorial.md
           - Weapons & Abilities (Advanced): tutorials/abilities_advanced.md
       - Core Editor Manual:
-          - AI: tutorials/ai_reference.md
-          - Animated Meshes: tutorials/animated_mesh.md
-          - Art in Core: tutorials/art_reference.md
-          - Audio: tutorials/audio_reference.md
+          - AI: references/ai.md
+          - Animated Meshes: references/animated_meshes.md
+          - Art in Core: references/art.md
+          - Audio: references/audio.md
           - Community Content: getting_started/community_content.md
           - Contexts: api/contexts.md
-          - Custom Materials: tutorials/custom_materials.md
-          - Editor Shortcuts: editor_keybindings.md
+          - Curves: references/curves.md
+          - Custom Materials: references/custom_materials.md
+          - Custom Properties: references/custom_properties.md
+          - Editor Shortcuts: references/editor_keybindings.md
           - Frameworks:
-              - Dungeon Framework Reference: tutorials/dungeon_framework_reference.md
+              - Dungeon Framework Reference: references/dungeon_framework.md
           - Game Components: api/components.md
-          - Interconnected Games: tutorials/interconnected_games.md
-          - Leaderboards: tutorials/leaderboards.md
-          - Merged Models: tutorials/merged_models.md
-          - Modeling Reference: tutorials/modeling_reference.md
-          - Networking: tutorials/networking.md
-          - Object Generator: tutorials/object_generator.md
-          - Offline Storage: tutorials/offline_storage.md
+          - IK and Custom Animations: references/ik_anchors.md
+          - Interconnected Games: references/interconnected_games.md
+          - Leaderboards: references/leaderboards.md
+          - Merged Models: references/merged_models.md
+          - Modeling Reference: references/modeling.md
+          - Networking: references/networking.md
+          - Object Generator: references/object_generator.md
+          - Offline Storage: references/offline_storage.md
+          - Party System: references/party_system.md
           - Performance Panel: getting_started/performance_panel.md
-          - Persistent Storage: tutorials/persistent_storage.md
+          - Persistent Storage: references/persistent_storage.md
           - Play-Mode Profiler: getting_started/profiler.md
-          - Portals: tutorials/portal_reference.md
+          - Portals: references/portals.md
           - Project Files: getting_started/project_files.md
           - Publishing Checklist: getting_started/publishing_checklist.md
-          - Queued Games: tutorials/queues.md
+          - Queued Games: references/queues.md
           - Scripting Introduction: tutorials/scripting_intro.md
-          - Shared Data Storage: tutorials/shared_storage.md
-          - Templates: tutorials/template_reference.md
-          - Triggers: tutorials/triggers.md
-          - UI: tutorials/ui_reference.md
-          - Vehicles: tutorials/vehicles.md
-          - Weapons: tutorials/weapons.md
+          - Shared Data Storage: references/shared_storage.md
+          - Spawn Points: references/spawnpoints.md
+          - Templates: references/templates.md
+          - Terrain: references/terrain.md
+          - Triggers: references/triggers.md
+          - UI: references/ui.md
+          - Vehicles: references/vehicles.md
+          - Voice Chat: references/voice_chat.md
+          - Weapons: references/weapons.md
   - Core API:
       - API Index: api/index.md
       - Animations & Sockets: api/animations.md
@@ -104,6 +113,8 @@ nav:
       - Enums: api/enums.md
       - Key Bindings: api/key_bindings.md
       - Lua Style Guide: tutorials/lua_style_guide.md
+      - Interfaces:
+          - Damageable: api/damageable.md
       - Types:
           - Ability: api/ability.md
           - AbilityPhaseSettings: api/abilityphasesettings.md
@@ -114,6 +125,7 @@ nav:
           - AreaLight: api/arealight.md
           - Audio: api/audio.md
           - Camera: api/camera.md
+          - CameraCapture: api/cameracapture.md
           - Color: api/color.md
           - CoreFriendCollection: api/corefriendcollection.md
           - CoreFriendCollectionEntry: api/corefriendcollectionentry.md
@@ -123,7 +135,10 @@ nav:
           - CoreObject: api/coreobject.md
           - CoreObjectReference: api/coreobjectreference.md
           - CorePlayerProfile: api/coreplayerprofile.md
+          - CurveKey: api/curvekey.md
+          - CustomMaterial: api/custommaterial.md
           - Damage: api/damage.md
+          - DamageableObject: api/damageableobject.md
           - Decal: api/decal.md
           - Equipment: api/equipment.md
           - Event: api/event.md
@@ -133,14 +148,17 @@ nav:
           - HitResult: api/hitresult.md
           - Hook: api/hook.md
           - HookListener: api/hooklistener.md
+          - IKAnchor: api/ikanchor.md
           - ImpactData: api/impactdata.md
           - LeaderboardEntry: api/leaderboardentry.md
           - Light: api/light.md
+          - MaterialSlot: api/materialslot.md
           - MergedModel: api/mergedmodel.md
           - NetReference: api/netreference.md
           - NetworkContext: api/networkcontext.md
           - Object: api/object.md
           - Other: api/other.md
+          - PartyInfo: api/partyinfo.md
           - PhysicsObject: api/physicsobject.md
           - Player: api/player.md
           - PlayerSettings: api/playersettings.md
@@ -153,6 +171,7 @@ nav:
           - Rotation: api/rotation.md
           - Script: api/script.md
           - ScriptAsset: api/scriptasset.md
+          - SimpleCurve: api/simplecurve.md
           - SmartAudio: api/smartaudio.md
           - SmartObject: api/smartobject.md
           - SpotLight: api/spotlight.md
@@ -169,6 +188,7 @@ nav:
           - UIPanel: api/uipanel.md
           - UIPerkPurchaseButton: api/uiperkpurchasebutton.md
           - UIProgressBar: api/uiprogressbar.md
+          - UIRewardPointsMeter: api/uirewardpointsmeter.md
           - UIScrollPanel: api/uiscrollpanel.md
           - UIText: api/uitext.md
           - Vector2: api/vector2.md
@@ -189,10 +209,12 @@ nav:
           - Environment: api/environment.md
           - Events: api/events.md
           - Game: api/game.md
+          - Input: api/input.md
           - Leaderboards: api/leaderboards.md
           - Storage: api/storage.md
           - Teams: api/teams.md
           - UI: api/ui.md
+          - VoiceChat: api/voicechat.md
           - World: api/world.md
   - Core Academy:
       - Academy: https://learn.coregames.com
@@ -207,7 +229,7 @@ nav:
 
 # Theme configuration
 theme:
-  name: null
+  name: material
   custom_dir: mkdocs-material/material
   language: en
   font:
@@ -215,6 +237,7 @@ theme:
     code: JetBrains Mono
   features:
     - navigation.tabs
+    - navigation.tabs.sticky
     - navigation.instant
     - navigation.sections
     - navigation.tracking
@@ -241,6 +264,8 @@ extra_css:
 extra_javascript:
   - assets/javascripts/manticore.js
   - assets/javascripts/lite-yt-embed.js
+  - assets/javascripts/tables.js
+  - https://cdnjs.cloudflare.com/ajax/libs/tablesort/5.2.1/tablesort.min.js
 
 extra:
   alternate:
@@ -255,6 +280,7 @@ extra:
     property: !ENV GOOGLE_ANALYTICS_KEY
   feedback_url: https://github.com/ManticoreGamesInc/platform-documentation/issues/new
   generator: false
+  robots: !ENV [ROBOTS, "noindex"]
   social:
     - icon: fontawesome/brands/discord
       link: https://discord.gg/core-creators
@@ -295,6 +321,9 @@ markdown_extensions:
   - pymdownx.emoji:
       emoji_index: !!python/name:materialx.emoji.twemoji
       emoji_generator: !!python/name:materialx.emoji.to_svg
+  - pymdownx.highlight:
+      linenums: true
+      linenums_style: pymdownx-inline
   - pymdownx.inlinehilite
   - pymdownx.keys:
       camel_case: true
@@ -318,43 +347,65 @@ plugins:
   - search
   - tags:
       tags_file: generated/tags.md
-  # - i18n:
-  #     default_language: en
-  #     languages:
-  #       fr: Français (Beta)
+  - git-revision-date-localized
+  - ezlinks
+  - i18n:
+      default_language: !ENV [DEFAULT_LANGUAGE, "en"]
+      default_language_only: !ENV [DEFAULT_LANGUAGE_ONLY, true]
+      languages:
+        fr: Français (Beta)
   - minify:
       minify_html: !ENV MKDOCS_MINIFY
-  - git-revision-date-localized
-  - autolinks
   - redirects:
       redirect_maps:
+        perks/implementing_perks.md: references/perks/implementing.md
+        perks/joining_perks.md: references/perks/joining.md
+        perks/perks_program.md: references/perks/program.md
+        perks/perks_rules.md: references/perks/rules.md
+        perks/perks.md: references/perks/program.md
+        perks/index.md: references/perks/program.md
+        reward_points/reward_points_reference.md: references/perks/reward_points.md
+        tutorials/ai_reference.md: references/ai.md
+        tutorials/animated_mesh.md: references/animated_meshes.md
+        tutorials/art_reference.md: references/art.md
+        tutorials/audio_reference.md: references/audio.md
+        tutorials/collaboration_overview.md: references/collaboration.md
+        tutorials/curves.md: references/curves.md
+        tutorials/custom_materials.md: references/custom_materials.md
+        tutorials/custom_properties.md: references/custom_properties.md
+        tutorials/dungeon_framework_reference.md: references/dungeon_framework.md
+        editor_keybindings.md: references/editor_keybindings.md
+        tutorials/global_game_jam.md: references/global_game_jam.md
+        tutorials/ik_anchors.md: references/ik_anchors.md
+        tutorials/interconnected_games.md: references/interconnected_games.md
+        tutorials/leaderboards.md: references/leaderboards.md
+        tutorials/merged_models.md: references/merged_models.md
+        tutorials/modeling_reference.md: references/modeling.md
+        tutorials/networking.md: references/networking.md
+        tutorials/object_generator.md: references/object_generator.md
+        tutorials/offline_storage.md: references/offline_storage.md
+        tutorials/party_system.md: references/party_system.md
+        tutorials/persistent_storage.md: references/persistent_storage.md
+        tutorials/portal_reference.md: references/portals.md
+        tutorials/queues.md: references/queues.md
+        tutorials/shared_storage.md: references/shared_storage.md
+        tutorials/survival_kit.md: references/survival_kit.md
+        tutorials/template_reference.md: references/templates.md
+        tutorials/triggers.md: references/triggers.md
+        tutorials/ui_reference.md: references/ui.md
+        tutorials/vehicles.md: references/vehicles.md
+        tutorials/weapons.md: references/weapons.md
         start.md: getting_started/start.md
         getting_started.md: getting_started/editor_intro.md
         news/showcase/just_getting_started.md: getting_started/editor_intro.md
         showcase/just_getting_started.md: getting_started/editor_intro.md
-        tutorials/examples.md: https://docs.coregames.com/api/examples.md
-        tutorials/gameplay/abilities.md: tutorials/abilities.md
-        tutorials/gameplay/weapons.md: tutorials/weapons.md
-        tutorials/gameplay/abilities_advanced.md: tutorials/abilities_advanced.md
-        tutorials/gameplay/lua_basics_lightbulb.md: tutorials/lua_basics_lightbulb.md
-        tutorials/gameplay/lua_basics_manticoin.md: tutorials/lua_basics_manticoin.md
-        tutorials/gameplay/persistent_storage.md: tutorials/persistent_storage.md
-        tutorials/art/scene_creation.md: tutorials/scene_creation.md
-        tutorials/art/modeling_basics.md: tutorials/modeling_basics.md
-        tutorials/gameplay/lua_style_guide.md: tutorials/lua_style_guide.md
+        tutorials/abilities.md: tutorials/ability_tutorial.md
         getting_started/other_engines.md: other_platforms/unity.md
         getting_started/troubleshooting.md: getting_started/core_help.md
         getting_started/other_platforms.md: other_platforms/unity.md
         tutorials/environmental_art.md: tutorials/environment_art.md
         tutorials/collaboration.md: tutorials/github.md
-        tutorials/rpg_framework_reference.md: tutorials/dungeon_framework_reference.md
-        tutorials/rpg_framework_documentation.md: tutorials/dungeon_framework_reference.md
-        tutorials/rpg_framework_overview.md: tutorials/dungeon_framework_reference.md
-        perks/perks.md: perks/implementing_perks.md
-        perks/index.md: perks/perks_program.md
         api/ability_bindings.md: api/key_bindings.md
         core_api.md: api/index.md
         api/examples.md: api/index.md
-        tutorials/lua_reference.md: tutorials/scripting_intro.md
-        tutorials/overview.md: tutorials/abilities.md
         tutorials/videos/pistol_shooter.md: https://www.youtube.com/CoreGamesOfficial

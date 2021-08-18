@@ -28,7 +28,7 @@ There are two ways to find your project folder: the normal way you would find an
 3. Inside, you should find a folder called **Core** (it may be **CORE**).
 4. Open the **Saved** folder
 5. Open the **Maps** folder
-6. In this folder, you should one folder for each saved project in the Core Editor.
+6. In this folder, you should have one folder for each saved project in the Core Editor.
 
 #### Open the Project File from the Core Editor
 
@@ -255,7 +255,7 @@ If you are not collaborating, you can **merge** the changes on to your local mai
 
 ### Using Templates
 
-Creating **templates** is an easy way to have multiple contributors to a project, without having to use Git. See the [Template Reference](template_reference.md) for more information on how to do this.
+Creating **templates** is an easy way to have multiple contributors to a project, without having to use Git. See the [Template Reference](templates.md) for more information on how to do this.
 
 ## Version Control Terminology
 
@@ -280,4 +280,4 @@ Creating **templates** is an easy way to have multiple contributors to a project
 
 ## Learn More
 
-[Template Reference](template_reference.md) | [Complex Modeling](modeling_basics.md) | [Publishing](publishing.md)
+[Template Reference](templates.md) | [Complex Modeling](modeling_basics.md) | [Publishing](publishing.md)

@@ -33,12 +33,16 @@ AnimatedMesh objects are skeletal CoreMeshes with parameterized animations baked
 | `GetAnimationDuration(string animationName)` | `number` | Returns the duration of the animation in seconds. Raises an error if `animationName` is not a valid animation on this mesh. | None |
 | `GetMeshForSlot(integer slotIndex)` | `string` | Returns the asset ID of the mesh assigned to the specified slot on this `AnimatedMesh`. Returns `nil` if no mesh is assigned to the slot. | Client-Only |
 | `SetMeshForSlot(integer slotIndex, string assetId)` | `None` | Assigns a mesh to the specified slot on this `AnimatedMesh`. If `assetId` is an empty string or identifies an incompatible asset, the slot will be cleared. | Client-Only |
+| `SetMaterialForSlot(string assetId, string slotName)` | `None` | Set the material in the given slot to the material specified by assetId. | None |
+| `GetMaterialSlot(string slotName)` | [`MaterialSlot`](materialslot.md) | Get the MaterialSlot object for the given slot. If called on the client on a networked object, the resulting object cannot be modified. | None |
+| `GetMaterialSlots()` | `Array<`[`MaterialSlot`](materialslot.md)`>` | Get an array of all MaterialSlots on this mesh. If called on the client on a networked object, the resulting object cannot be modified. | None |
+| `ResetMaterialSlot(string slotName)` | `None` | Resets a material slot to its original state. | None |
 
 ## Events
 
 | Event Name | Return Type | Description | Tags |
 | ----- | ----------- | ----------- | ---- |
-| `animationEvent` | `Event<`[`AnimatedMesh`](animatedmesh.md) string`>` | Some animations have events specified at important points of the animation (e.g. the impact point in a punch animation). This event is fired with the animated mesh that triggered it and the name of the event at those points. | Client-Only |
+| `animationEvent` | `Event<`[`AnimatedMesh`](animatedmesh.md) string eventName, string animationName`>` | Some animations have events specified at important points of the animation (e.g. the impact point in a punch animation). This event is fired with the animated mesh that triggered it, the name of the event at those points, and the name of the animation itself. | Client-Only |
 
 ## Examples
 
@@ -144,6 +148,44 @@ See also: [CoreObject.GetCustomProperty](coreobject.md) | [World.SpawnAsset](wor
 
 Example using:
 
+### `GetMeshForSlot`
+
+### `SetMeshForSlot`
+
+In this example, a client script copies the mesh slots from one `AnimatedMesh` to another.
+
+```lua
+local ANIM_MESH_1 = script:GetCustomProperty("AnimMesh1"):WaitForObject()
+local ANIM_MESH_2 = script:GetCustomProperty("AnimMesh2"):WaitForObject()
+
+function Clear(animMesh)
+    animMesh:SetMeshForSlot(1, "")
+    animMesh:SetMeshForSlot(2, "")
+    animMesh:SetMeshForSlot(3, "")
+    animMesh:SetMeshForSlot(4, "")
+end
+
+function CopyMeshAtSlot(slotIndex)
+    local mesh = ANIM_MESH_1:GetMeshForSlot(slotIndex)
+    if mesh then
+        ANIM_MESH_2:SetMeshForSlot(slotIndex, mesh)
+    end
+end
+
+Clear(ANIM_MESH_2)
+
+CopyMeshAtSlot(1)
+CopyMeshAtSlot(2)
+CopyMeshAtSlot(3)
+CopyMeshAtSlot(4)
+```
+
+See also: [CoreObject.GetCustomProperty](coreobject.md) | [CoreObjectReference.WaitForObject](coreobjectreference.md)
+
+---
+
+Example using:
+
 ### `PlayAnimation`
 
 ### `playbackRateMultiplier`
@@ -201,6 +243,26 @@ dragonMesh:StopAnimations()
 ```
 
 See also: [CoreObject.GetCustomProperty](coreobject.md) | [World.SpawnAsset](world.md) | [AnimatedMesh.PlayAnimation](animatedmesh.md) | [Task.Wait](task.md)
+
+---
+
+Example using:
+
+### `GetMaterialSlots`
+
+### `SetMaterialForSlot`
+
+In this example an NPC's material is changed at runtime. The script is placed as a child of the NPC's animated mesh and the desired material is assigned to the script as a custom property.
+
+```lua
+local ANIM_MESH = script.parent
+local MATERIAL = script:GetCustomProperty("Material")
+
+local matSlot = ANIM_MESH:GetMaterialSlots()[1]
+ANIM_MESH:SetMaterialForSlot(MATERIAL, matSlot.slotName)
+```
+
+See also: [MaterialSlot.slotName](materialslot.md) | [CoreObject.parent](coreobject.md)
 
 ---
 

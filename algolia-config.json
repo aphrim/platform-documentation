@@ -4,25 +4,33 @@
         {
             "url": "https://docs.coregames.com/api/",
             "selectors_key": "api",
-            "tags": [
-                "api",
-                "reference"
-            ]
-        },
-        {
-            "url": "https://docs.coregames.com/(?P<lang>.*?)/",
-            "variables": {
-                "lang": ["en", "fr"]
+            "tags": "api",
+            "extra_attributes": {
+                "lang": "en"
             }
         },
-        "https://docs.coregames.com"
+        {
+            "url": "https://docs.coregames.com/references/",
+            "tags": "reference"
+        },
+        {
+            "url": "https://docs.coregames.com/fr/",
+            "extra_attributes": {
+                "lang": "fr"
+            }
+        },
+        {
+            "url": "https://docs.coregames.com/",
+            "extra_attributes": {
+                "lang": "en"
+            }
+        }
     ],
     "sitemap_urls": [
         "https://docs.coregames.com/sitemap.xml"
     ],
     "stop_urls": [
-        "https://docs.coregames.com/generated/tags/",
-        "https://docs.coregames.com/fr/"
+        "https://docs.coregames.com/generated/"
     ],
     "selectors": {
         "default": {
@@ -67,7 +75,8 @@
             "fr"
         ],
         "attributesForFaceting": [
-            "searchable(tags)"
+            "tags",
+            "lang"
         ],
         "attributesToSnippet": [
             "content:10"

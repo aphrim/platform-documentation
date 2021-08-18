@@ -8,7 +8,7 @@ tags:
 
 # Player
 
-Player is an object representation of the state of a player connected to the game, as well as their avatar in the world.
+Player is an object representation of the state of a player connected to the game, as well as their avatar in the world. Player also implements the [Damageable](damageable.md) interface.
 
 ## Properties
 
@@ -23,20 +23,20 @@ Player is an object representation of the state of a player connected to the gam
 | `desiredFacingMode` | [`FacingMode`](enums.md#facingmode) | Which controls mode to use for this Player. May be overridden by certain movement modes like MovementMode.SWIMMING or when mounted. Possible values are FacingMode.FACE_AIM_WHEN_ACTIVE, FacingMode.FACE_AIM_ALWAYS, and FacingMode.FACE_MOVEMENT. | Read-Write, Server-Only |
 | `defaultRotationRate` | `number` | Determines how quickly the Player turns to match the camera's look. Set to -1 for immediate rotation. Currently only supports rotation around the Z-axis. | Read-Write, Server-Only |
 | `currentRotationRate` | `number` | Reports the real rotation rate that results from any active mechanics/movement overrides. | Read-Only |
-| `hitPoints` | `number` | Current amount of hitpoints. | Read-Write |
-| `maxHitPoints` | `number` | Maximum amount of hitpoints. | Read-Write |
+| `hitPoints` | `number` | Current amount of hit points. | Read-Write |
+| `maxHitPoints` | `number` | Maximum amount of hit points. | Read-Write |
 | `kills` | `integer` | The number of times the player has killed another player. | Read-Write |
 | `deaths` | `integer` | The number of times the player has died. | Read-Write |
 | `stepHeight` | `number` | Maximum height in centimeters the Player can step up. Range is 0-100. Default = 45. | Read-Write |
 | `maxWalkSpeed` | `number` | Maximum speed while the player is on the ground. Clients can only read. Default = 640. | Read-Write |
-| `maxAcceleration` | `number` | Max Acceleration (rate of change of velocity). Clients can only read. Default = 1800. | Read-Write |
+| `maxAcceleration` | `number` | Max Acceleration (rate of change of velocity). Clients can only read. Default = 1800. Acceleration is expressed in centimeters per second squared. | Read-Write |
 | `brakingDecelerationFalling` | `number` | Deceleration when falling and not applying acceleration. Default = 0. | Read-Write |
 | `brakingDecelerationWalking` | `number` | Deceleration when walking and movement input has stopped. Default = 1000. | Read-Write |
 | `groundFriction` | `number` | Friction when walking on ground. Default = 8.0 | Read-Write |
 | `brakingFrictionFactor` | `number` | Multiplier for friction when braking. Default = 0.6. | Read-Write |
 | `walkableFloorAngle` | `number` | Max walkable floor angle, in degrees. Clients can only read. Default = 44. | Read-Write |
 | `maxJumpCount` | `integer` | Max number of jumps, to enable multiple jumps. Set to 0 to disable jumping. | Read-Write |
-| `jumpVelocity` | `number` | Vertical speed applied to Player when they jump. Default = 900. | Read-Write |
+| `jumpVelocity` | `number` | Vertical speed applied to Player when they jump. Default = 900. Speed is expressed in centimeters per second. | Read-Write |
 | `gravityScale` | `number` | Multiplier on gravity applied. Default = 1.9. | Read-Write |
 | `maxSwimSpeed` | `number` | Maximum speed while the player is swimming. Default = 420. | Read-Write |
 | `touchForceFactor` | `number` | Force applied to physics objects when contacted with a Player. Default = 1. | Read-Write |
@@ -51,7 +51,12 @@ Player is an object representation of the state of a player connected to the gam
 | `isSwimming` | `boolean` | True if the Player is swimming in water. | Read-Only |
 | `isWalking` | `boolean` | True if the Player is in walking mode. | Read-Only |
 | `isDead` | `boolean` | True if the Player is dead, otherwise false. | Read-Only |
-| `isVisible` | `boolean` | Defaults to `true`. Set to `false` to hide the player and any attached objects which are set to inherit visibility. Note that using this property in conjunction with the deprecated `SetVisibility()` function may cause unpredictable results. | Read-Write |
+| `isSpawned` | `boolean` | True if the player is in a spawned state, false if the player is despawned. | Read-Only |
+| `spawnMode` | [`SpawnMode`](enums.md#spawnmode) | Specifies how a start point is selected when a player initially spawns or spawns from a despawned state. | Read-Write |
+| `respawnMode` | [`RespawnMode`](enums.md#respawnmode) | Specifies how a start point is selected when a player respawns. | Read-Write |
+| `respawnDelay` | `number` | The delay in seconds from when a player dies until they respawn. | Read-Write |
+| `respawnTimeRemaining` | `number` | The number of seconds remaining until the player respawns. Returns 0 if the player is already spawned. | Read-Only, Server-Only |
+| `isVisible` | `boolean` | Defaults to `true`. Set to `false` to hide the player and any attached objects which are set to inherit visibility. Note that using this property in conjunction with the deprecated `SetVisibility()` function may cause unpredictable results. | Server-Only, Read-Write |
 | `isCollidable` | `boolean` | Defaults to `true`. Set to `false` to disable collision on the player and any attached objects set to inherit collision. | Read-Write |
 | `isMovementEnabled` | `boolean` | Defaults to `true`. Set to `false` to disable player movement. Unlike `movementControlMode`, which can disable movement input, setting `isMovementEnabled` to `false` freezes the Player in place, ignoring gravity and reactions to collision or impulses, unless the Player's transform is explicitly changed or the Player is attached to a parent CoreObject that moves. | Read-Write |
 | `movementControlMode` | [`MovementControlMode`](enums.md#movementcontrolmode) | Specify how players control their movement. Clients can only read. Default: MovementControlMode.LOOK_RELATIVE. MovementControlMode.NONE: Directional movement input is ignored. MovementControlMode.LOOK_RELATIVE: Forward movement follows the current player's look direction. MovementControlMode.VIEW_RELATIVE: Forward movement follows the current view's look direction. MovementControlMode.FACING_RELATIVE: Forward movement follows the current player's facing direction. MovementControlMode.FIXED_AXES: Movement axis are fixed. | Read-Write |
@@ -65,6 +70,8 @@ Player is an object representation of the state of a player connected to the gam
 | `isVisibleToSelf` | `boolean` | Set whether to hide the Player model on Player's own client, for sniper scope, etc. | Read-Write, Client-Only |
 | `parentCoreObject` | [`CoreObject`](coreobject.md) | If the Player has been attached to a parent CoreObject, returns that object. Otherwise returns `nil`. | Read-Only |
 | `occupiedVehicle` | [`Vehicle`](vehicle.md) | Returns the `Vehicle` that the player currently occupies, or `nil` if the player is not occupying a vehicle. | Read-Only |
+| `isInParty` | `boolean` | Returns whether this player is in a party. This is known regardless of if the party is public or private. | Read-Only |
+| `isPartyLeader` | `boolean` | Returns whether this player is the leader of a public party. | Read-Only |
 
 ## Functions
 
@@ -79,8 +86,8 @@ Player is an object representation of the state of a player connected to the gam
 | `GetWorldScale()` | [`Vector3`](vector3.md) | The absolute scale of this player. | None |
 | `SetWorldScale(Vector3)` | `None` | The absolute scale of this player (must be uniform). | Server-Only |
 | `AddImpulse(Vector3)` | `None` | Adds an impulse force to the Player. | Server-Only |
-| `GetVelocity()` | [`Vector3`](vector3.md) | Gets the current velocity of the Player. | None |
-| `SetVelocity(Vector3)` | `None` | Sets the Player's velocity to the given amount. | Server-Only |
+| `GetVelocity()` | [`Vector3`](vector3.md) | Gets the current velocity of the Player. The velocity vector indicates the direction, with its magnitude expressed in centimeters per second. | None |
+| `SetVelocity(Vector3)` | `None` | Sets the Player's velocity to the given amount. The velocity vector indicates the direction, with its magnitude expressed in centimeters per second. | Server-Only |
 | `ResetVelocity()` | `None` | Resets the Player's velocity to zero. | Server-Only |
 | `GetAbilities()` | `Array<`[`Ability`](ability.md)`>` | Array of all Abilities assigned to this Player. | None |
 | `GetEquipment()` | `Array<`[`Equipment`](equipment.md)`>` | Array of all Equipment assigned to this Player. | None |
@@ -90,8 +97,10 @@ Player is an object representation of the state of a player connected to the gam
 | `SetVisibility(boolean, [boolean])` | `None` | *This function is deprecated. Please use the `.isVisible` property instead.* Shows or hides the Player. The second parameter is optional, defaults to true, and determines if attachments to the Player are hidden as well as the Player. | Server-Only, **Deprecated** |
 | `GetVisibility()` | `boolean` | Returns whether or not the Player is hidden. | None |
 | `EnableRagdoll([string socketName, number weight])` | `None` | Enables ragdoll for the Player, starting on `socketName` weighted by `weight` (between 0.0 and 1.0). This can cause the Player capsule to detach from the mesh. All parameters are optional; `socketName` defaults to the root and `weight` defaults to 1.0. Multiple bones can have ragdoll enabled simultaneously. See [Socket Names](../api/animations.md#socket-names) for the list of possible values. | Server-Only |
-| `Respawn([table parameters])` | `None` | Resurrects a dead Player based on respawn settings in the game (default in-place). An optional table may be provided to override the following parameters:<br>`position (Vector3)`: Respawn at this position. Defaults to the position of the spawn point selected based on the game's respawn settings, or the player's current position if no spawn point was selected.<br>`rotation (Rotation)`: Sets the player's rotation after respawning. Defaults to the rotation of the selected spawn point, or the player's current rotation if no spawn point was selected.<br>`scale (Vector3)`: Sets the player's scale after respawning. Defaults to the Player Scale Multiplier of the selected spawn point, or the player's current scale if no spawn point was selected. Player scale must be uniform. (All three components must be equal.)<br>`spawnKey (string)`: Only spawn points with the given `spawnKey` will be considered. If omitted, only spawn points with a blank `spawnKey` are used. | Server-Only |
-| `Respawn(Vector, Rotation)` | `None` | Resurrects a dead Player at a specific location and rotation. This form of `Player:Respawn()` may be removed at some point in the future. It is recommended to use the optional parameter table if position and rotation need to be specified. For example: `player:Respawn({position = newPosition, rotation = newRotation})` | Server-Only, **Deprecated** |
+| `Spawn([table parameters])` | `None` | Resurrects a dead player or spawns a despawned player based on respawn settings in the game (default in-place). An optional table may be provided to override the following parameters:<br>`position (Vector3)`: Respawn at this position. Defaults to the position of the spawn point selected based on the game's respawn settings, or the player's current position if no spawn point was selected.<br>`rotation (Rotation)`: Sets the player's rotation after respawning. Defaults to the rotation of the selected spawn point, or the player's current rotation if no spawn point was selected.<br>`scale (Vector3)`: Sets the player's scale after respawning. Defaults to the Player Scale Multiplier of the selected spawn point, or the player's current scale if no spawn point was selected. Player scale must be uniform. (All three components must be equal.)<br>`spawnKey (string)`: Only spawn points with the given `spawnKey` will be considered. If omitted, only spawn points with a blank `spawnKey` are used. | Server-Only |
+| `Despawn()` | `None` | Despawns the player. While despawned, the player is invisible, has no collision, and cannot move. Use the `Spawn()` function to respawn the player. | Server-Only |
+| `Respawn([table parameters])` | `None` | *This function is deprecated. Please use `Player:Spawn()` instead.* Resurrects a dead Player based on respawn settings in the game (default in-place). An optional table may be provided to override the following parameters:<br>`position (Vector3)`: Respawn at this position. Defaults to the position of the spawn point selected based on the game's respawn settings, or the player's current position if no spawn point was selected.<br>`rotation (Rotation)`: Sets the player's rotation after respawning. Defaults to the rotation of the selected spawn point, or the player's current rotation if no spawn point was selected.<br>`scale (Vector3)`: Sets the player's scale after respawning. Defaults to the Player Scale Multiplier of the selected spawn point, or the player's current scale if no spawn point was selected. Player scale must be uniform. (All three components must be equal.)<br>`spawnKey (string)`: Only spawn points with the given `spawnKey` will be considered. If omitted, only spawn points with a blank `spawnKey` are used. | Server-Only, **Deprecated** |
+| `Respawn(Vector, Rotation)` | `None` | *This function is deprecated. Please use `Player:Spawn()` instead. For example: `player:Spawn({position = newPosition, rotation = newRotation})`* Resurrects a dead Player at a specific location and rotation. | Server-Only, **Deprecated** |
 | `GetViewWorldPosition()` | [`Vector3`](vector3.md) | Get position of the Player's camera view. | None |
 | `GetViewWorldRotation()` | [`Rotation`](rotation.md) | Get rotation of the Player's camera view. | None |
 | `GetLookWorldRotation()` | [`Rotation`](rotation.md) | Get the rotation for the direction the Player is facing. | None |
@@ -105,6 +114,7 @@ Player is an object representation of the state of a player connected to the gam
 | `TransferToGame(string)` | `None` | Does not work in preview mode or in games played locally. Transfers player to the game specified by the passed-in game ID. Example: The game ID for the URL `https://www.coregames.com/games/577d80/core-royale` is `577d80/core-royale`. This function will raise an error if called from a client script on a player other than the local player. | None |
 | `TransferToGame(CoreGameInfo)` | `None` | Does not work in preview mode or in games played locally. Transfers player to the game specified by the passed-in `CoreGameInfo`. This function will raise an error if called from a client script on a player other than the local player. | None |
 | `TransferToGame(CoreGameCollectionEntry)` | `None` | Does not work in preview mode or in games played locally. Transfers player to the game specified by the passed-in `CoreGameCollectionEntry`. This function will raise an error if called from a client script on a player other than the local player. | None |
+| `TransferToScene(string sceneName, [table parameters])` | `None` | Does not work in preview mode or in games played locally. Transfers player to the scene specified by the passed-in scene name. The specified scene must be a scene within the same game. This function will raise an error if called from a client script on a player other than the local player. <br/>The following optional parameters are supported:<br/>`spawnKey (string)`: Spawns the player at a spawn point with a matching key. If an invalid key is provided, the player will spawn at the origin, (0, 0, 0). | None |
 | `GetAttachedObjects()` | `Array<`[`CoreObject`](coreobject.md)`>` | Returns a table containing CoreObjects attached to this player. | None |
 | `SetMounted(boolean)` | `None` | Forces a player in or out of mounted state. | Server-Only |
 | `GetActiveCamera()` | [`Camera`](camera.md) | Returns whichever camera is currently active for the Player. | Client-Only |
@@ -123,6 +133,13 @@ Player is an object representation of the state of a player connected to the gam
 | `Detach()` | `None` | If the Player is attached to a parent CoreObject, detaches them and re-enables player movement. | Server-Only |
 | `GetJoinTransferData()` | [`PlayerTransferData`](playertransferdata.md) | Returns data indicating how a player joined the game (via browsing, portal, social invite, etc) and the game ID of their previous game if they joined directly from another game. Join data should be available during the player's entire session. | None |
 | `GetLeaveTransferData()` | [`PlayerTransferData`](playertransferdata.md) | Returns data indicating how a player left the game (via browsing, portal, social invite, etc) and the game ID of their next game if they are directly joining another game. Leave data is not valid until `Game.playerLeftEvent` has fired for the player. | None |
+| `SetPrivateNetworkedData(string key, value)` | [`PrivateNetworkedDataResultCode`](enums.md#privatenetworkeddataresultcode) | Sets the private networked data for this player associated with the key. Value can be any type that could be sent with a networked event. Each key is replicated independently, and this data is only sent to the owning player. | Server-Only |
+| `GetPrivateNetworkedData(string key)` | `value` | Returns the private networked data on this player associated with the given key or nil if no data is found. | None |
+| `GetPrivateNetworkedDataKeys()` | `Array<string>` | Returns an array of all keys with private data set. | None |
+| `GrantRewardPoints(int rewardPoints, string activityName)` | `None` | Adds an amount of Reward Points to a player for completing a certain activity. | Server-Only |
+| `GetIKAnchors()` | `Array<`[`IKAnchor`](ikanchor.md)`>` | Returns an array of all IKAnchor objects activated on this player. | None |
+| `IsInPartyWith(Player)` | `boolean` | Returns whether both players are in the same public party. | None |
+| `GetPartyInfo()` | [`PartyInfo`](partyinfo.md) | If the player is in a party, returns a PartyInfo object with data about that party. | None |
 
 ## Events
 
@@ -130,7 +147,8 @@ Player is an object representation of the state of a player connected to the gam
 | ----- | ----------- | ----------- | ---- |
 | `damagedEvent` | `Event<`[`Player`](player.md) player, Damage damage`>` | Fired when the Player takes damage. | Server-Only |
 | `diedEvent` | `Event<`[`Player`](player.md) player, Damage damage`>` | Fired when the Player dies. | Server-Only |
-| `respawnedEvent` | `Event<`[`Player`](player.md)`>` | Fired when the Player respawns. | Server-Only |
+| `respawnedEvent` | `Event<`[`Player`](player.md) player`>` | Fired when the Player respawns. *This event has been deprecated. Please use spawnedEvent instead.* | Server-Only, **Deprecated** |
+| `spawnedEvent` | `Event<`[`Player`](player.md) player, PlayerStart playerStart, string spawnKey`>` | Fired when the Player spawns. Indicates the start point at which they spawned and the spawn key used to select the start point. The start point may be nil if a position was specified when spawning the player. | Server-Only |
 | `bindingPressedEvent` | `Event<`[`Player`](player.md) player, string binding`>` | Fired when an action binding is pressed. Second parameter tells you which binding. Possible values of the bindings are listed on the [Ability binding](../api/key_bindings.md) page. | None |
 | `bindingReleasedEvent` | `Event<`[`Player`](player.md) player, string binding`>` | Fired when an action binding is released. Second parameter tells you which binding. | None |
 | `resourceChangedEvent` | `Event<`[`Player`](player.md) player, string resourceType, integer newAmount`>` | Fired when a resource changed, indicating the type of the resource and its new amount. | None |
@@ -138,7 +156,8 @@ Player is an object representation of the state of a player connected to the gam
 | `movementModeChangedEvent` | `Event<`[`Player`](player.md) player, MovementMode newMovementMode, MovementMode previousMovementMode`>` | Fired when a Player's movement mode changes. The first parameter is the Player being changed. The second parameter is the "new" movement mode. The third parameter is the "previous" movement mode. Possible values for MovementMode are: MovementMode.NONE, MovementMode.WALKING, MovementMode.FALLING, MovementMode.SWIMMING, MovementMode.FLYING. | None |
 | `emoteStartedEvent` | `Event<`[`Player`](player.md) player, string emoteId`>` | Fired when the Player begins playing an emote. | None |
 | `emoteStoppedEvent` | `Event<`[`Player`](player.md) player, string emoteId`>` | Fired when the Player stops playing an emote or an emote is interrupted. | None |
-| `animationEvent` | `Event<`[`Player`](player.md) player, string eventName`>` | Some animations have events specified at important points of the animation (e.g. the impact point in a punch animation). This event is fired with the Player that triggered it and the name of the event at those points. | Client-Only |
+| `animationEvent` | `Event<`[`Player`](player.md) player, string eventName, string animationName`>` | Some animations have events specified at important points of the animation (e.g. the impact point in a punch animation). This event is fired with the Player that triggered it, the name of the event at those points, and the name of the animation itself. Events generated from default stances on the player will return "animation_stance" as the animation name. | Client-Only |
+| `privateNetworkedDataChangedEvent` | `Event<`[`Player`](player.md) player, string key`>` | Fired when the player's private data changes. On the client, only the local player's private data is available. | None |
 
 ## Hooks
 
@@ -202,15 +221,15 @@ Example using:
 
 ### `diedEvent`
 
-### `respawnedEvent`
+### `spawnedEvent`
 
 ### `ApplyDamage`
 
 ### `Die`
 
-### `Respawn`
+### `Spawn`
 
-There are events that fire at most major points for a player during gameplay. This example shows how to receive an event for players being damaged, dying, and respawning, as well as how to make a player automatically respawn after dying.
+There are events that fire at most major points for a player during gameplay. This example shows how to receive an event for players being damaged, dying, and spawning, as well as how to make a player automatically respawn after dying.
 
 One important thing to note - `player.damagedEvent` and `player.diedEvent` only execute on the server, so if you are writing a script that runs inside of a client context, it will not receive these events!
 
@@ -226,10 +245,10 @@ function OnPlayerDied(player, damage)
     Task.Wait(2)
     local pos = Vector3.New(0, 0, 500)
     local rot = Rotation.New(0, 0, 45)
-    player:Respawn({position = pos, rotation = rot})
+    player:Spawn({position = pos, rotation = rot})
 end
 
-function OnPlayerRespawn(player)
+function OnPlayerSpawn(player)
     print("Player " .. player.name .. " is back!")
 end
 
@@ -237,7 +256,7 @@ end
 for _, p in pairs(Game.GetPlayers()) do
     p.damagedEvent:Connect(OnPlayerDamage)
     p.diedEvent:Connect(OnPlayerDied)
-    p.respawnedEvent:Connect(OnPlayerRespawn)
+    p.spawnedEvent:Connect(OnPlayerSpawn)
 end
 player:ApplyDamage(Damage.New(25))
 Task.Wait(1)
@@ -245,7 +264,6 @@ player:ApplyDamage(Damage.New(50))
 Task.Wait(1)
 -- This will kill the player, because they only have 100 health by default.
 player:ApplyDamage(Damage.New(100))
-Task.Wait(2.1)
 Task.Wait(2.1)
 -- We can also kill the player directly, regardless of health
 player:Die()
@@ -292,7 +310,7 @@ end
 Game.playerJoinedEvent:Connect(function(player)
     player.emoteStartedEvent:Connect(OnEmoteStarted)
     player.emoteStoppedEvent:Connect(OnEmoteStopped)
-    
+
     local message = "Welcome to the server " .. player.name ..
     "! There are currently " .. CountPlayersDancing() .. " players dancing."
     Task.Wait(1)
@@ -815,6 +833,144 @@ See also: [Rotation.New](rotation.md) | [Vector3.UP](vector3.md)
 
 Example using:
 
+### `GrantRewardPoints`
+
+In this example, a player receives a daily reward of 100 points (RP) when they join the game. The reward name can be anything, so we use "Daily" here, to identify it. Lua's os.date() system is used in conjunction with Storage, to figure out if this is the first time the player has joined today.
+
+```lua
+local REWARD_AMOUNT = 100
+local REWARD_NAME = "Daily"
+
+function IsFirstJoinToday(player)
+    local today = os.date("*t")
+    local day = today.day
+    local month = today.month
+
+    print("Day = " .. day)
+    print("Month = " .. month)
+
+    local data = Storage.GetPlayerData(player)
+    if day ~= data.lastJoinDay
+    or month ~= data.lastJoinMonth then
+        data.lastJoinDay = day
+        data.lastJoinMonth = month
+        Storage.SetPlayerData(player, data)
+        return true
+    end
+    return false
+end
+
+function OnPlayerJoined(player)
+    if IsFirstJoinToday(player) then
+        player:GrantRewardPoints(REWARD_AMOUNT, REWARD_NAME)
+        print("Awarded")
+    else
+        print("Not awarded")
+    end
+end
+
+Game.playerJoinedEvent:Connect(OnPlayerJoined)
+```
+
+See also: [Storage.GetPlayerData](storage.md) | [Game.playerJoinedEvent](game.md)
+
+---
+
+Example using:
+
+### `SetPrivateNetworkedData`
+
+### `GetPrivateNetworkedData`
+
+### `GetPrivateNetworkedDataKeys`
+
+### `privateNetworkedDataChangedEvent`
+
+### `FAILURE`
+
+In this example, a player's inventory data is transferred from server to client. The server first accesses permanent storage to see if the player has previously played the game. If not, their inventory is initialized with starting items. Then, the server uses the private networked data API to transfer this information to the client script. Client scripts cannot access storage directly, so they depend on this transfer in order to display to the user interface what's contained in the inventory. Furthermore, because the transfer is private, other players don't incur networking costs. Plus, knowing other players' inventories is not important for the gameplay in this case.
+
+```lua
+-- BEGIN REGION: Server script
+function InitInventory(player, data)
+    if not data.inventory then
+        print(player.name .. " is a new player. Give them starting inventory.")
+        data.inventory = {
+            ["sword"] = 1,
+            ["shield"] = 1,
+            ["rupies"] = 15,
+        }
+    else
+        print(player.name .. " already has inventory from a previous play session.")
+    end
+    player.serverUserData.inventory = data.inventory
+end
+
+function OnPlayerJoined(player)
+    local data = Storage.GetPlayerData(player)
+    InitInventory(player, data)
+
+    -- Transfer storage to the client
+    for key,value in pairs(data) do
+        local resultCode = player:SetPrivateNetworkedData(key, value)
+
+        if resultCode == PrivateNetworkedDataResultCode.FAILURE then
+            warn("Setting private data " .. key .. " for player " ..
+                player.name .. " failed.")
+
+        elseif resultCode == PrivateNetworkedDataResultCode.EXCEEDED_SIZE_LIMIT then
+            warn("Setting private data " .. key .. " for player " ..
+                player.name .. " exceeded the limit.")
+        end
+    end
+end
+
+function OnPlayerLeft(player)
+    local data = Storage.GetPlayerData(player)
+    data.inventory = player.serverUserData.inventory
+    Storage.SetPlayerData(player, data)
+end
+
+Game.playerJoinedEvent:Connect(OnPlayerJoined)
+Game.playerLeftEvent:Connect(OnPlayerLeft)
+-- END REGION: Server script
+
+-- BEGIN REGION: Client script
+local PLAYER = Game.GetLocalPlayer()
+
+function UpdateFromNetworkedData(key)
+    local data = PLAYER:GetPrivateNetworkedData(key)
+    -- TODO: This would depend on your type of data and game system
+    -- E.g.: An inventory of items
+    if key == "inventory" then
+        for itemId,count in pairs(data) do
+            print(PLAYER.name .. " has " .. count .. " copies of " .. itemId)
+        end
+        PLAYER.clientUserData.inventory = data
+    end
+end
+
+-- React to changes in the data, or receive the initial replication in case
+-- the client script loaded before the networked data had replicated
+function OnPrivateNetworkedDataChanged(player, key)
+    UpdateFromNetworkedData(key)
+end
+
+PLAYER.privateNetworkedDataChangedEvent:Connect(OnPrivateNetworkedDataChanged)
+
+-- In case the client script loaded after the networked data has replicated
+for i,key in ipairs(PLAYER:GetPrivateNetworkedDataKeys()) do
+    UpdateFromNetworkedData(key)
+end
+-- END REGION: Client script
+```
+
+See also: [Storage.GetPlayerData](storage.md) | [Game.playerJoinedEvent](game.md) | [Player.clientUserData](player.md)
+
+---
+
+Example using:
+
 ### `SetWorldScale`
 
 ### `GetWorldScale`
@@ -852,7 +1008,7 @@ local trigger = script.parent
 function OnBeginOverlap(theTrigger, player)
   -- The object's type must be checked because CoreObjects also overlap triggers
     if player and player:IsA("Player") then
-        player:TransferToGame("577d80/core-royale")
+        player:TransferToGame("e39f3e/core-world")
     end
 end
 
@@ -1017,6 +1173,42 @@ end
 ```
 
 See also: [Game.GetPlayers](game.md) | [CoreLua.print](coreluafunctions.md) | [Task.Wait](task.md)
+
+---
+
+Example using:
+
+### `isInParty`
+
+### `isPartyLeader`
+
+### `IsInPartyWith`
+
+This example will teleport any players to their team leader if the leader is connected.
+
+```lua
+function OnPlayerJoined(player)
+    -- If the player is not in a party, stop here
+    if not player.isInParty then
+        return
+    end
+
+    local players = Game.GetPlayers()
+    -- Go through each player
+    for _, p in ipairs(players) do
+        -- If the other player is the leader
+        if p ~= player and p:IsInPartyWith(player) and p.isPartyLeader then
+            -- Teleport the player to the leader
+            player:SetWorldPosition(p:GetWorldPosition())
+            return
+        end
+    end
+end
+
+Game.playerJoinedEvent:Connect(OnPlayerJoined)
+```
+
+See also: [Game.playerJoinedEvent](game.md) | [Player:IsInPartyWith](player.md)
 
 ---
 
@@ -1294,7 +1486,7 @@ Example using:
 
 Perks are a system to create in-game purchases that allow players to support game creators and enable exclusive content.
 
-Learn more about Perks [here](https://docs.coregames.com/perks/perks/).
+Learn more about Perks [here](https://docs.coregames.com/references/perks/program/).
 
 Repeatable Perks - This type of Perk can be purchased any number of times by players. In this example, we implement the sale of in game currency through multiple bundles and track the purchases using storage and resources. This script will track each Perk bundle to grant users the currency/resource.
 
@@ -1408,7 +1600,7 @@ Example using:
 
 Perks are a system to create in-game purchases that allow players to support game creators and enable exclusive content.
 
-Learn more about Perks [here](https://docs.coregames.com/perks/perks/).
+Learn more about Perks [here](https://docs.coregames.com/references/perks/program/).
 
 In the following example, a script is a child of a Perk Purchase Button, of type `UIPerkPurchaseButton`. The user interface container that has the button is in a client context. The specifics of the Perk come in through the custom property `MyPerk`, which is then assigned to the button with `SetPerkReference()`. When the player joins we connect to the `perkChangedEvent` and print out their existing perks with the LogPerks() function.
 

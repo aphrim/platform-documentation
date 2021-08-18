@@ -15,7 +15,7 @@ Game is a collection of functions and events related to players in the game, rou
 | Class Function Name | Return Type | Description | Tags |
 | -------------- | ----------- | ----------- | ---- |
 | `Game.GetLocalPlayer()` | [`Player`](player.md) | Returns the local player. | Client-Only |
-| `Game.GetPlayers([table parameters])` | `Array<`[`Player`](player.md)`>` | Returns a table containing the players currently in the game. An optional table may be provided containing parameters to filter the list of players returned: ignoreDead(boolean), ignoreLiving(boolean), ignoreTeams(integer or table of integer), includeTeams(integer or table of integer), ignorePlayers(Player or table of Player), E.g.: `Game.GetPlayers({ignoreDead = true, ignorePlayers = Game.GetLocalPlayer()})`. | None |
+| `Game.GetPlayers([table parameters])` | `Array<`[`Player`](player.md)`>` | Returns a table containing the players currently in the game. An optional table may be provided containing parameters to filter the list of players returned: ignoreDead(boolean), ignoreLiving(boolean), ignoreSpawned(boolean), ignoreDespawned(boolean), ignoreTeams(integer or table of integer), includeTeams(integer or table of integer), ignorePlayers(Player or table of Player), E.g.: `Game.GetPlayers({ignoreDead = true, ignorePlayers = Game.GetLocalPlayer()})`. | None |
 | `Game.FindPlayer(string playerId)` | [`Player`](player.md) | Returns the Player with the given player ID, if they're currently in the game. Otherwise returns `nil`. | None |
 | `Game.FindNearestPlayer(Vector3 position, [table parameters])` | [`Player`](player.md) | Returns the Player that is nearest to the given position. An optional table may be provided containing parameters to filter the list of players considered. This supports the same list of parameters as GetPlayers(). | None |
 | `Game.FindPlayersInCylinder(Vector3 position, number radius, [table parameters])` | `Array<`[`Player`](player.md)`>` | Returns a table with all Players that are in the given area. Position's `z` is ignored with the cylindrical area always upright. An optional table may be provided containing parameters to filter the list of players considered. This supports the same list of parameters as GetPlayers(). | None |
@@ -27,11 +27,13 @@ Game is a collection of functions and events related to players in the game, rou
 | `Game.IncreaseTeamScore(integer team, integer scoreChange)` | `None` | Increases one team's score. | Server-Only |
 | `Game.DecreaseTeamScore(integer team, integer scoreChange)` | `None` | Decreases one team's score. | Server-Only |
 | `Game.ResetTeamScores()` | `None` | Sets all teams' scores to 0. | Server-Only |
-| `Game.StopAcceptingPlayers()` | `None` | Sets the current server instance to stop accepting new players. Note that players already in the process of joining the server will still be accepted, and `Game.playerJoinedEvent` may still fire for a short period of time after a call to this function returns. Other new players will be directed to a different instance of the game. | Server-Only |
+| `Game.StopAcceptingPlayers()` | `None` | Locks the current server instance to stop accepting new players. Note that players already in the process of joining the server will still be accepted, and `Game.playerJoinedEvent` may still fire for a short period of time after a call to this function returns. Other new players will be directed to a different instance of the game. | Server-Only |
 | `Game.IsAcceptingPlayers()` | `boolean` | Returns `true` if the current server instance is still accepting new players. Returns `false` if the server has stopped accepting new players due to a call to `Game.StopAcceptingPlayers()`. | None |
 | `Game.TransferAllPlayersToGame(string gameId)` | `None` | Similar to `Player:TransferToGame()`, transfers all players to the game specified by the passed in game ID. Does not work in preview mode or in games played locally. | Server-Only |
 | `Game.TransferAllPlayersToGame(CoreGameInfo)` | `None` | Similar to `Player:TransferToGame()`, transfers all players to the game specified by the passed in `CoreGameInfo`. Does not work in preview mode or in games played locally. | Server-Only |
 | `Game.TransferAllPlayersToGame(CoreGameCollectionEntry)` | `None` | Similar to `Player:TransferToGame()`, transfers all players to the game specified by the passed in `CoreGameCollectionEntry`. Does not work in preview mode or in games played locally. | Server-Only |
+| `Game.TransferAllPlayersToScene(string sceneName)` | `None` | Similar to `Player:TransferToScene()`, transfers all players to the scene specified by the passed in scene name. Does not work in preview mode or in games played locally. <br/>The following optional parameters are supported:<br/>`spawnKey (string)`: Spawns the players at a spawn point with a matching key. If an invalid key is provided, the players will spawn at the origin, (0, 0, 0). | Server-Only |
+| `Game.GetCurrentSceneName()` | `string` | Returns the name of the current scene. | None |
 
 ## Events
 
@@ -399,7 +401,7 @@ function OnRoundEnd()
     -- Respawn all the players
     local allPlayers = Game.GetPlayers()
     for _, player in ipairs(allPlayers) do
-        player:Respawn()
+        player:Spawn()
     end
 
     Game.ResetTeamScores()
@@ -423,7 +425,7 @@ function Tick()
 end
 ```
 
-See also: [Game.EndRound](game.md) | [Player.Respawn](player.md) | [CoreLua.print](coreluafunctions.md) | [Task.Wait](task.md) | [Event.Connect](event.md)
+See also: [Game.EndRound](game.md) | [Player.Spawn](player.md) | [CoreLua.print](coreluafunctions.md) | [Task.Wait](task.md) | [Event.Connect](event.md)
 
 ---
 

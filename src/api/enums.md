@@ -57,6 +57,16 @@ tags:
 | `BroadcastMessageResultCode.EXCEEDED_RATE_WARNING_LIMIT` | `3` | The message was sent, but the current rate of chat messages is approaching the allowed limit. |
 | `BroadcastMessageResultCode.EXCEEDED_RATE_LIMIT` | `4` | The message was not sent because too many messages have been sent too quickly. |
 
+## CameraCaptureResolution
+
+| Enum Name | Value | Description |
+| --------- | ----------- | ----------- |
+| `CameraCaptureResolution.VERY_SMALL` | `0` | 64x64 |
+| `CameraCaptureResolution.SMALL` | `1` | 128x128 |
+| `CameraCaptureResolution.MEDIUM` | `2` | 256x256 |
+| `CameraCaptureResolution.LARGE` | `3` | 512x512 |
+| `CameraCaptureResolution.VERY_LARGE` | `4` | 1024x1024 |
+
 ## Collision
 
 | Enum Name | Value | Description |
@@ -73,6 +83,25 @@ tags:
 | `CoreModalType.CHARACTER_PICKER` | `2` | The modal popup in which the player selects one of their characters. |
 | `CoreModalType.MOUNT_PICKER` | `3` | The modal dialog in which the player selects which of their mounts to use. |
 | `CoreModalType.EMOTE_PICKER` | `4` | The modal dialog in which the player selects an emote to play. |
+| `CoreModalType.SOCIAL_MENU` | `6` | The dialog opened when inspecting another player. |
+
+## CurveExtrapolation
+
+| Enum Name | Value | Description |
+| --------- | ----------- | ----------- |
+| `CurveExtrapolation.CYCLE` | `0` | Repeats the curve in a cycle. |
+| `CurveExtrapolation.CYCLE_WITH_OFFSET` | `1` | Repeats the curve in a cycle with an offset relative to the first or last key's value. |
+| `CurveExtrapolation.OSCILLATE` | `2` | Extrapolates a sinusoidal curve. |
+| `CurveExtrapolation.LINEAR` | `3` | Curves follow a linearly increasing or decreasing value before and after the ends of the curve. |
+| `CurveExtrapolation.CONSTANT` | `4` | Values remain constant, using the first key value before the beginning of the curve and the last key value after the end of the curve. |
+
+## CurveInterpolation
+
+| Enum Name | Value | Description |
+| --------- | ----------- | ----------- |
+| `CurveInterpolation.LINEAR` | `0` | Uses linear interpolation, with the value moving in a straight line from one key to the next. |
+| `CurveInterpolation.CONSTANT` | `1` | Uses a constant value, resulting in stepped changes from one key to the next. |
+| `CurveInterpolation.CUBIC` | `2` | Uses cubic interpolation to generate a smooth curve. |
 
 ## DamageReason
 
@@ -91,6 +120,25 @@ tags:
 | `FacingMode.FACE_AIM_WHEN_ACTIVE` | `0` | Player will face the direction of their aim while moving. |
 | `FacingMode.FACE_AIM_ALWAYS` | `1` | Player always faces the direction of their aim. |
 | `FacingMode.FACE_MOVEMENT` | `2` | Player faces the direction of their movement. |
+
+## IKAnchorType
+
+| Enum Name | Value | Description |
+| --------- | ----------- | ----------- |
+| `IKAnchorType.LEFT_HAND` | `0` | The left hand. |
+| `IKAnchorType.RIGHT_HAND` | `1` | The right hand. |
+| `IKAnchorType.PELVIS` | `2` | The pelvis. |
+| `IKAnchorType.LEFT_FOOT` | `3` | The left foot. |
+| `IKAnchorType.RIGHT_FOOT` | `4` | The right foot. |
+
+## ImageTileType
+
+| Enum Name | Value | Description |
+| --------- | ----------- | ----------- |
+| `ImageTileType.NONE` | `0` | The texture is stretched to the size of the container. |
+| `ImageTileType.HORIZONTAL` | `1` | The texture is tiled horizontally and stretched vertically. |
+| `ImageTileType.VERTICAL` | `2` | The texture is tiled vertically and stretched horizontally. |
+| `ImageTileType.BOTH` | `3` | The texture is tiled along both axes. |
 
 ## LeaderboardType
 
@@ -159,6 +207,44 @@ tags:
 | `PlayerTransferReason.PORTAL` | `6` | Player used a portal from one game to another (or otherwise made use of the `TransferToGame()` function.) |
 | `PlayerTransferReason.AFK` | `7` | Player was disconnected for being AFK. |
 | `PlayerTransferReason.EXIT` | `8` | Player exited Core. Core was sad. |
+| `PlayerTransferReason.PORTAL_SCENE` | `9` | Player used a portal from one scene to another (or otherwise made use of the `TransferToScene()` function.) |
+
+## PrivateNetworkedDataResultCode
+
+| Enum Name | Value | Description |
+| --------- | ----------- | ----------- |
+| `PrivateNetworkedDataResultCode.SUCCESS` | `0` | The operation succeeded. |
+| `PrivateNetworkedDataResultCode.FAILURE` | `1` | An error occurred. |
+| `PrivateNetworkedDataResultCode.EXCEEDED_SIZE_LIMIT` | `2` | The value is too large and was not stored. |
+
+## ProgressBarFillType
+
+| Enum Name | Value | Description |
+| --------- | ----------- | ----------- |
+| `ProgressBarFillType.LEFT_TO_RIGHT` | `0` | Progress bar fills from left to right. |
+| `ProgressBarFillType.RIGHT_TO_LEFT` | `1` | Progress bar fills from right to left. |
+| `ProgressBarFillType.TOP_TO_BOTTOM` | `3` | Progress bar fills from top to bottom. |
+| `ProgressBarFillType.BOTTOM_TO_TOP` | `4` | Progress bar fills from bottom to top. |
+| `ProgressBarFillType.FROM_CENTER` | `2` | Progress bar fills from the center outward. |
+
+## RespawnMode
+
+| Enum Name | Value | Description |
+| --------- | ----------- | ----------- |
+| `RespawnMode.NONE` | `0` | Player does not respawn automatically. |
+| `RespawnMode.IN_PLACE` | `1` | Respawns the player at the same location and rotation as when they died. |
+| `RespawnMode.ROUND_ROBIN` | `2` | Selects start points in a repeating sequential pattern. |
+| `RespawnMode.AT_CLOSEST_SPAWN_POINT` | `3` | Respawns the player at the start point closest to the location the player died. |
+| `RespawnMode.FARTHEST_FROM_OTHER_PLAYERS` | `4` | Respawns the player at the start point farthest from any other player. |
+| `RespawnMode.FARTHEST_FROM_ENEMY` | `5` | Respawns the player at the start point farthest from an enemy player. |
+| `RespawnMode.RANDOM` | `6` | Respawns the player at a random start point. |
+
+## RewardsDialogTab
+
+| Enum Name | Value | Description |
+| --------- | ----------- | ----------- |
+| `RewardsDialogTab.QUESTS` | `1` | The quests tab. |
+| `RewardsDialogTab.GAMES` | `2` | The games tab. |
 
 ## RotationMode
 
@@ -167,6 +253,15 @@ tags:
 | `RotationMode.CAMERA` | `0` | Default, uses the rotation of the active `Camera` object. |
 | `RotationMode.NONE` | `1` | Camera does not rotate. |
 | `RotationMode.LOOK_ANGLE` | `2` | Camera rotates based on player's look direction. |
+
+## SpawnMode
+
+| Enum Name | Value | Description |
+| --------- | ----------- | ----------- |
+| `SpawnMode.RANDOM` | `0` | Spawns the player at a random start point. |
+| `SpawnMode.ROUND_ROBIN` | `1` | Selects start points in a repeating sequential pattern. |
+| `SpawnMode.FARTHEST_FROM_OTHER_PLAYERS` | `2` | Spawns the player at the start point farthest from any other player. |
+| `SpawnMode.FARTHEST_FROM_ENEMY` | `3` | Spawns the player at the start point farthest from an enemy player. |
 
 ## StorageResultCode
 
@@ -220,3 +315,11 @@ tags:
 | `Visibility.INHERIT` | `0` | Object is visible if its parent is visible, or if it has no parent. |
 | `Visibility.FORCE_ON` | `1` | Object is visible, regardless of parent state. |
 | `Visibility.FORCE_OFF` | `2` | Object is not visible, regardless of parent state. |
+
+## VoiceChatMode
+
+| Enum Name | Value | Description |
+| --------- | ----------- | ----------- |
+| `VoiceChatMode.NONE` | `0` | Voice chat is disabled. |
+| `VoiceChatMode.TEAM` | `1` | Voice chat is enabled for team members. |
+| `VoiceChatMode.ALL` | `2` | Voice chat is enabled for all players in the game instance. |

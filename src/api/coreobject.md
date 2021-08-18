@@ -26,7 +26,7 @@ CoreObject is an Object placed in the scene hierarchy during edit mode or is par
 | `isServerOnly` | `boolean` | If `true`, this object was spawned on the server and is not replicated to clients. | Read-Only |
 | `isNetworked` | `boolean` | If `true`, this object replicates from the server to clients. | Read-Only |
 | `lifeSpan` | `number` | Duration after which the object is destroyed. | Read-Write |
-| `sourceTemplateId` | `string` | The ID of the template from which this `CoreObject` was instantiated. `nil` if the object did not come from a template. | Read-Only |
+| `sourceTemplateId` | `string` | The ID of the template from which this `CoreObject` was instantiated. `0000000000000000` if this object is not a template. Deinstanced templates also return `0000000000000000`. | Read-Only |
 
 ## Functions
 
@@ -48,13 +48,13 @@ CoreObject is an Object placed in the scene hierarchy during edit mode or is par
 | `SetWorldRotation(Rotation)` | `None` | The absolute rotation. | None |
 | `GetWorldScale()` | [`Vector3`](vector3.md) | The absolute scale. | None |
 | `SetWorldScale(Vector3)` | `None` | The absolute scale. | None |
-| `GetVelocity()` | [`Vector3`](vector3.md) | The object's velocity in world space. | None |
-| `SetVelocity(Vector3)` | `None` | Set the object's velocity in world space. Only works for physics objects. | None |
+| `GetVelocity()` | [`Vector3`](vector3.md) | The object's velocity in world space. The velocity vector indicates the direction, with its magnitude expressed in centimeters per second. | None |
+| `SetVelocity(Vector3)` | `None` | Set the object's velocity in world space. Only works for physics objects. The velocity vector indicates the direction, with its magnitude expressed in centimeters per second. | None |
 | `GetAngularVelocity()` | [`Vector3`](vector3.md) | The object's angular velocity in degrees per second. | None |
 | `SetAngularVelocity(Vector3)` | `None` | Set the object's angular velocity in degrees per second in world space. Only works for physics objects. | None |
 | `SetLocalAngularVelocity(Vector3)` | `None` | Set the object's angular velocity in degrees per second in local space. Only works for physics objects. | None |
 | `GetReference()` | [`CoreObjectReference`](coreobjectreference.md) | Returns a CoreObjectReference pointing at this object. | None |
-| `GetChildren()` | `Array<`[`CoreObject`](coreobject.md)`>` | Returns a table containing the object's children, may be empty. | None |
+| `GetChildren()` | `Array<`[`CoreObject`](coreobject.md)`>` | Returns a table containing the object's children, may be empty. Order is not guaranteed to match what is in the hierarchy. | None |
 | `IsVisibleInHierarchy()` | `boolean` | Returns true if this object and all of its ancestors are visible. | None |
 | `IsCollidableInHierarchy()` | `boolean` | Returns true if this object and all of its ancestors are collidable. | None |
 | `IsCameraCollidableInHierarchy()` | `boolean` | Returns true if this object and all of its ancestors are collidable with the camera. | None |
@@ -79,9 +79,9 @@ CoreObject is an Object placed in the scene hierarchy during edit mode or is par
 | `MoveTo(Vector3, number, [boolean])` | `None` | Smoothly moves the object to the target location over a given amount of time (seconds). Third parameter specifies if the given destination is in local space (true) or world space (false). | None |
 | `RotateTo(Rotation/Quaternion, number, [boolean])` | `None` | Smoothly rotates the object to the target orientation over a given amount of time. Third parameter specifies if given rotation is in local space (true) or world space (false). | None |
 | `ScaleTo(Vector3, number, [boolean])` | `None` | Smoothly scales the object to the target scale over a given amount of time. Third parameter specifies if the given scale is in local space (true) or world space (false). | None |
-| `MoveContinuous(Vector3, [boolean])` | `None` | Smoothly moves the object over time by the given velocity vector. Second parameter specifies if the given velocity is in local space (true) or world space (false). | None |
-| `RotateContinuous(Rotation/Quaternion, [number, [boolean]])` | `None` | Smoothly rotates the object over time by the given rotation (per second). The second parameter is an optional multiplier, for very fast rotations. Third parameter specifies if the given rotation or quaternion is in local space (true) or world space (false (default)). | None |
-| `RotateContinuous(Vector3, [boolean])` | `None` | Smoothly rotates the object over time by the given angular velocity. Second parameter specifies whether to interpret the given velocity in local space (true) or world space (false (default)). | None |
+| `MoveContinuous(Vector3, [boolean])` | `None` | Smoothly moves the object over time by the given velocity vector. Second parameter specifies if the given velocity is in local space (true) or world space (false). The velocity vector indicates the direction, with its magnitude expressed in centimeters per second. | None |
+| `RotateContinuous(Rotation/Quaternion, [number, [boolean]])` | `None` | Smoothly rotates the object over time by the given rotation (per second). The second parameter is an optional multiplier, for very fast rotations. Third parameter specifies if the given rotation or quaternion is in local space (true) or world space (false (default)). Angular velocity is expressed in degrees per second. | None |
+| `RotateContinuous(Vector3, [boolean])` | `None` | Smoothly rotates the object over time by the given angular velocity. Second parameter specifies whether to interpret the given velocity in local space (true) or world space (false (default)). Angular velocity is expressed in degrees per second. | None |
 | `ScaleContinuous(Vector3, [boolean])` | `None` | Smoothly scales the object over time by the given scale vector per second. Second parameter specifies if the given scale rate is in local space (true) or world space (false). | None |
 | `StopMove()` | `None` | Interrupts further movement from MoveTo(), MoveContinuous(), or Follow(). | None |
 | `StopRotate()` | `None` | Interrupts further rotation from RotateTo(), RotateContinuous(), LookAtContinuous(), or LookAtLocalView(). | None |
@@ -91,6 +91,10 @@ CoreObject is an Object placed in the scene hierarchy during edit mode or is par
 | `LookAtContinuous(Object, [boolean], [number])` | `None` | Smoothly rotates a CoreObject to look at another given CoreObject or Player. Second parameter is optional and locks the pitch, default is unlocked. Third parameter is optional and sets how fast it tracks the target (in radians/second). If speed is not supplied it tracks as fast as possible. | None |
 | `LookAtLocalView([boolean])` | `None` | Continuously looks at the local camera. The boolean parameter is optional and locks the pitch. (Client-only) | None |
 | `Destroy()` | `None` | Destroys the object and all descendants. You can check whether an object has been destroyed by calling `Object.IsValid(object)`, which will return true if object is still a valid object, or false if it has been destroyed. | None |
+| `ReorderBeforeSiblings()` | `None` | Reorders this object before all of its siblings in the hierarchy. | None |
+| `ReorderAfterSiblings()` | `None` | Reorders this object after all of its siblings in the hierarchy. | None |
+| `ReorderBefore(CoreObject sibling)` | `None` | Reorders this object just before the specified sibling in the hierarchy. | None |
+| `ReorderAfter(CoreObject sibling)` | `None` | Reorders this object just after the specified sibling in the hierarchy. | None |
 
 ## Events
 
@@ -738,6 +742,96 @@ script:SetNetworkedCustomProperty("NetworkedCoreObjectReference", cube:GetRefere
 ```
 
 See also: [CoreObject.GetCustomProperty](coreobject.md) | [World.SpawnAsset](world.md) | [Event.Connect](event.md) | [CoreLua.print](coreluafunctions.md)
+
+---
+
+Example using:
+
+### `ReorderAfter`
+
+### `ReorderAfterSiblings`
+
+In this example, a UI Panel has several buttons as children. At runtime they are sorted vertically, one below the other. The player can click to drag them and change their order, depending on where they are released. The draw order of the buttons is updated to reflect the new positions. Draw order is changed with the methods `ReorderAfter()` and `ReorderAfterSiblings()`.
+
+```lua
+local UI_PANEL = script:GetCustomProperty("UIPanel"):WaitForObject()
+local allButtons = UI_PANEL:FindDescendantsByType("UIButton")
+
+UI.SetCursorVisible(true)
+UI.SetCanCursorInteractWithUI(true)
+
+local deltaY = 0
+local activeButton = nil
+
+function Tick(deltaTime)
+    if activeButton then
+        local cursorPos = UI.GetCursorPosition()
+        activeButton.x = CoreMath.Lerp(activeButton.x, 10, deltaTime * 12)
+        activeButton.y = cursorPos.y + deltaY
+    end
+end
+
+function OnPressed(button)
+    activeButton = button
+    local cursorPos = UI.GetCursorPosition()
+    deltaY = button.y - cursorPos.y
+
+    button:ReorderAfterSiblings()
+end
+
+function OnReleased(button)
+    activeButton = nil
+
+    local lastButton = allButtons[#allButtons]
+
+    if button.y < allButtons[1].y then
+        MoveToIndex(button, 1)
+
+    elseif button ~= lastButton and button.y > lastButton.y then
+        MoveToIndex(button, #allButtons)
+    else
+        for i,btn in ipairs(allButtons) do
+            if button.y < btn.y then
+                if button.clientUserData.index > i then
+                    MoveToIndex(button, i)
+                else
+                    MoveToIndex(button, i - 1)
+                end
+                break
+            end
+        end
+    end
+    UpdatePositions()
+end
+
+function MoveToIndex(button, index)
+    table.remove(allButtons, button.clientUserData.index)
+    table.insert(allButtons, index, button)
+end
+
+function UpdatePositions()
+    local y = 0
+    for i,btn in ipairs(allButtons) do
+        btn.x = 0
+        btn.y = y
+        y = y + btn.height
+
+        if i > 1 then
+            btn:ReorderAfter(allButtons[i - 1])
+        end
+        btn.clientUserData.index = i
+    end
+end
+
+for _,btn in ipairs(allButtons) do
+    btn.pressedEvent:Connect(OnPressed)
+    btn.releasedEvent:Connect(OnReleased)
+end
+
+UpdatePositions()
+```
+
+See also: [UI.GetCursorPosition](ui.md) | [UIControl.y](uicontrol.md) | [UIButton.pressedEvent](uibutton.md) | [CoreObject.clientUserData](coreobject.md) | [CoreMath.Lerp](coremath.md) | [CoreObjectReference.WaitForObject](coreobjectreference.md)
 
 ---
 
